@@ -29,6 +29,7 @@ Online shopping business implementation
 
 -   [Laravel](https://laravel.com/) - PHP web framework
 
+This project runs on Laravel 9 and requires PHP 8.0+ .
 
 ## Getting Started
 
