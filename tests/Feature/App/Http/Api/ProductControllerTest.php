@@ -81,6 +81,7 @@ class ProductControllerTest extends TestCase
 
     public function test_that_user_can_create_product()
     {
+        $this->withoutExceptionHandling();
         $user = User::find(1);
         Passport::actingAs($user);
 
@@ -91,13 +92,7 @@ class ProductControllerTest extends TestCase
 
         $response = $this->json('POST', route('admin.product.store'), $data);
 
-        $response->assertJsonValidationErrors(['price']);
-
-        $response->assertJson([
-            "message" => "The price field is required.",
-        ]);
-
-        $response->assertStatus(422);
+        $response->assertStatus(201);
     }
 
 
@@ -117,7 +112,7 @@ class ProductControllerTest extends TestCase
         $response = $this->json('POST', route('admin.product.store'), $data);
 
         $response->assertJson([
-            "message" => "Unauthorized.",
+            "message" => "Unauthenticated.",
         ]);
 
         $response->assertStatus(401);
@@ -131,7 +126,7 @@ class ProductControllerTest extends TestCase
 
     public function test_that_user_can_retrieve_products()
     {
-        $response = $this->json('POST', route('product.all'));
+        $response = $this->json('GET', route('product.all'));
 
         $response->assertJson([
             "status" => true,
@@ -154,8 +149,8 @@ class ProductControllerTest extends TestCase
         $product->price = 100;
         $product->user_id = 1;
         $product->save();
-        
-        $response = $this->json('POST', route('product.show', $product->id));
+
+        $response = $this->json('GET', route('product.show', $product->id));
 
         $response->assertJson([
             "status" => true,

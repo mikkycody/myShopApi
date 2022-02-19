@@ -37,15 +37,19 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        if (!Auth::attempt($request->only('email', 'password')))
-            return $this->res(401, false, 'Unauthorized');
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        $token->save();
-        $user->access_token = $tokenResult->accessToken;
-        $user->save();
-        return $this->res(200, true, 'User Authenticated Successfully', new UserResource($user));
+        try {
+            if (!Auth::attempt($request->only('email', 'password')))
+                return $this->res(401, false, 'Unauthorized');
+            $user = $request->user();
+            $tokenResult = $user->createToken('Personal Access Token');
+            $token = $tokenResult->token;
+            $token->save();
+            $user->access_token = $tokenResult->accessToken;
+            $user->save();
+            return $this->res(200, true, 'User Authenticated Successfully', new UserResource($user));
+        } catch (Exception $e) {
+            return $this->res(500, false, $e->getMessage());
+        }
     }
 
     /**

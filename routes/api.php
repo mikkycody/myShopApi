@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +17,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
+    Route::name('admin.product.')->prefix('product')->middleware('isAdmin')->group(function () {
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+    });
+
     Route::name('auth.')->prefix('auth')->group(function () {
         Route::post('register', [AuthController::class , 'signup'])->name('signup');
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    });
+
+    Route::name('product.')->prefix('product')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('all');
+        Route::get('{id}', [ProductController::class, 'show'])->name('show');
     });
 });
