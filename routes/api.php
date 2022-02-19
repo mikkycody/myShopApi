@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
     });
 
     Route::name('auth.')->prefix('auth')->group(function () {
-        Route::post('register', [AuthController::class , 'signup'])->name('signup');
+        Route::post('register', [AuthController::class, 'signup'])->name('signup');
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     });
@@ -31,4 +32,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::get('/', [ProductController::class, 'index'])->name('all');
         Route::get('{id}', [ProductController::class, 'show'])->name('show');
     });
+
+    Route::post('cart', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 });

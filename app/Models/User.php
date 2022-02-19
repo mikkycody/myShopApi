@@ -58,6 +58,15 @@ class User extends Authenticatable
         return $this->hasMany(Product::class);
     }
 
+    /**
+     * User to carts relationship
+     */
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
      /** Check if user has a role of an admin */
      public function isAdmin(){
         return $this->roles()->where('name', 'Admin')->exists() == true;

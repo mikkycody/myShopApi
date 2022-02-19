@@ -7,10 +7,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Laravel\Passport\Passport;
 
-class CarttControllerTest extends TestCase
+class CartControllerTest extends TestCase
 {
     use RefreshDatabase;
-
+    
+    public function setUp(): void
+    {
+        parent::setUp();
+        // seed the database
+        $this->seed();
+    }
 
     /**
      * Test that a user can create a cart.
@@ -18,7 +24,7 @@ class CarttControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can__create_a_cart()
+    public function test_that_user_can_create_a_cart()
     {
         $user = User::find(2);
         Passport::actingAs($user);

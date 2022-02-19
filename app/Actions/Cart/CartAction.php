@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Actions\Cart;
+
+use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class CartAction
+{
+    public static function create()
+    {
+        DB::beginTransaction();
+        return Cart::create([
+            'user_id' => Auth::id()
+        ]);
+        DB::commit();
+    }
+}

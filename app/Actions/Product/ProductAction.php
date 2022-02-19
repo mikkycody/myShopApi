@@ -14,8 +14,4 @@ class ProductAction {
         ]));
         DB::commit();
     }
-
-    public static function find($id){
-        return Product::findOrFail($id);
-    }
 }
