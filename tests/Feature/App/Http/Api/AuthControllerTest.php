@@ -8,7 +8,7 @@ use App\Models\User;
 use Laravel\Passport\Passport;
 
 
-class AuthTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -245,7 +245,6 @@ class AuthTest extends TestCase
      */
     public function test_that_user_can_not_sign_in_with_wrong_credentials()
     {
-
         $data = [
             //send wrong login details
             'email' => 'Bush@gmail.com',
@@ -264,9 +263,6 @@ class AuthTest extends TestCase
      */
     public function test_that_user_can_sign_in()
     {
-
-        $this->withoutExceptionHandling();
-
         \Illuminate\Support\Facades\Artisan::call('passport:install');
 
         $user = User::factory()->create();
@@ -283,16 +279,11 @@ class AuthTest extends TestCase
      */
     public function test_that_user_can_logout()
     {
-
-        $this->withoutExceptionHandling();
-
         \Illuminate\Support\Facades\Artisan::call('passport:install');
 
-        $user = User::factory()->create();
+        Passport::actingAs(User::factory()->create());
 
-        Passport::actingAs($user);
-
-        $response = $this->json('GET', route('auth.logout'), $user->toArray());
+        $response = $this->json('GET', route('auth.logout'));
 
         $response->assertStatus(200);
     }
