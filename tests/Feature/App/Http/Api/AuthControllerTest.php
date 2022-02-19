@@ -13,7 +13,7 @@ class AuthTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Test taht a user should not signup without name.
+     * Test that a user should not signup without name.
      *
      * @return void
      */
@@ -28,19 +28,19 @@ class AuthTest extends TestCase
             //missing name input
         ];
 
-        $response = $this->json('POST', route('signup'), $data);
+        $response = $this->json('POST', route('auth.signup'), $data);
 
         $response->assertJsonValidationErrors(['name']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The name field is required.",
         ]);
 
         $response->assertStatus(422);
     }
 
     /**
-     * Test taht a user should not signup without password.
+     * Test that a user should not signup without password.
      *
      * @return void
      */
@@ -56,19 +56,19 @@ class AuthTest extends TestCase
             //missing password input
         ];
 
-        $response = $this->json('POST', route('signup'), $data);
+        $response = $this->json('POST', route('auth.signup'), $data);
 
         $response->assertJsonValidationErrors(['password']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The password field is required.",
         ]);
 
         $response->assertStatus(422);
     }
 
     /**
-     * Test taht a user should not signup without passwordn confirmation match.
+     * Test that a user should not signup without passwordn confirmation match.
      *
      * @return void
      */
@@ -84,19 +84,19 @@ class AuthTest extends TestCase
             // password mismatch
         ];
 
-        $response = $this->json('POST', route('signup'), $data);
+        $response = $this->json('POST', route('auth.signup'), $data);
 
         $response->assertJsonValidationErrors(['password']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The password confirmation does not match.",
         ]);
 
         $response->assertStatus(422);
     }
 
     /**
-     * Test taht a user should not signup without email.
+     * Test that a user should not signup without email.
      *
      * @return void
      */
@@ -110,20 +110,53 @@ class AuthTest extends TestCase
             // missing email input
         ];
 
-        $response = $this->json('POST', route('signup'), $data);
+        $response = $this->json('POST', route('auth.signup'), $data);
 
         $response->assertJsonValidationErrors(['email']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The email field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user should not signup with an invalid email.
+     *
+     * @return void
+     */
+
+    public function test_that_user_can_not_sign_up_with_invalid_email()
+    {
+        $data = [
+            'name' => 'Bush',
+            'email' => "something@invalid",
+            'password' => 'somethingsomething',
+            'password_confirmation' => 'somethingsomething',
+        ];
+
+        $response = $this->json('POST', route('auth.signup'), $data);
+
+        $response->assertJsonValidationErrors(['email']);
+
+        $response->assertJson([
+            "message" => "The email must be a valid email address.",
         ]);
 
         $response->assertStatus(422);
     }
 
 
+    /**
+     * Test that a user can signup.
+     *
+     * @return void
+     */
     public function test_that_user_can_sign_up()
     {
+        $this->withoutExceptionHandling();
+
         $data = [
             'name' => 'Bush',
             'password' => 'somethingsomething',
@@ -131,11 +164,16 @@ class AuthTest extends TestCase
             'email' => 'mikkycody@gmail.com',
         ];
 
-        $response = $this->json('POST', route('signup'), $data);
+        $response = $this->json('POST', route('auth.signup'), $data);
 
         $response->assertStatus(201);
     }
 
+    /**
+     * Test that a user can not not signin with no email.
+     *
+     * @return void
+     */
     public function test_that_user_can_not_sign_in_with_no_email()
     {
         $data = [
@@ -143,17 +181,45 @@ class AuthTest extends TestCase
             'password' => 'somethingsomething'
         ];
 
-        $response = $this->json('POST', route('login'), $data);
+        $response = $this->json('POST', route('auth.login'), $data);
 
         $response->assertJsonValidationErrors(['email']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The email field is required.",
         ]);
 
         $response->assertStatus(422);
     }
 
+    /**
+     * Test that a user can not not signin with an invalid email.
+     *
+     * @return void
+     */
+    public function test_that_user_can_not_sign_in_with_invalid_email()
+    {
+        $data = [
+            'email' => "something@invalid",
+            'password' => 'somethingsomething'
+        ];
+
+        $response = $this->json('POST', route('auth.login'), $data);
+
+        $response->assertJsonValidationErrors(['email']);
+
+        $response->assertJson([
+            "message" => "The email must be a valid email address.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can not not signin with no password.
+     *
+     * @return void
+     */
     public function test_that_user_can_not_sign_in_with_no_password()
     {
         $data = [
@@ -161,17 +227,22 @@ class AuthTest extends TestCase
             // 'password' => 'somethingsomething'
         ];
 
-        $response = $this->json('POST', route('login'), $data);
+        $response = $this->json('POST', route('auth.login'), $data);
 
         $response->assertJsonValidationErrors(['password']);
 
         $response->assertJson([
-            "message" => "The given data was invalid.",
+            "message" => "The password field is required.",
         ]);
 
         $response->assertStatus(422);
     }
 
+    /**
+     * Test that a user can not not signin with wrong credentials.
+     *
+     * @return void
+     */
     public function test_that_user_can_not_sign_in_with_wrong_credentials()
     {
 
@@ -181,11 +252,16 @@ class AuthTest extends TestCase
             'password' => 'thisiswrong123'
         ];
 
-        $response = $this->json('POST', route('login'), $data);
+        $response = $this->json('POST', route('auth.login'), $data);
 
         $response->assertStatus(401);
     }
 
+    /**
+     * Test that a user can signin.
+     *
+     * @return void
+     */
     public function test_that_user_can_sign_in()
     {
 
@@ -195,11 +271,16 @@ class AuthTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->json('POST', route('login'), ['email' => $user->email, 'password' => 'password']);
+        $response = $this->json('POST', route('auth.login'), ['email' => $user->email, 'password' => 'password']);
 
         $response->assertStatus(200);
     }
 
+    /**
+     * Test that a user can logout.
+     *
+     * @return void
+     */
     public function test_that_user_can_logout()
     {
 
@@ -211,7 +292,7 @@ class AuthTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('GET', route('logout'), $user->toArray());
+        $response = $this->json('GET', route('auth.logout'), $user->toArray());
 
         $response->assertStatus(200);
     }
