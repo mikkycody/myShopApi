@@ -74,14 +74,13 @@ class ProductControllerTest extends TestCase
     }
 
     /**
-     * Test that a user can create a product.
+     * Test that only admin user can create a product.
      *
      * @return void
      */
 
-    public function test_that_user_can_create_product()
+    public function test_that__only_admin_user_can_create_product()
     {
-        $this->withoutExceptionHandling();
         $user = User::find(1);
         Passport::actingAs($user);
 
@@ -97,13 +96,16 @@ class ProductControllerTest extends TestCase
 
 
     /**
-     * Test that a user should not create a product without beeing logged in as an admin.
+     * Test that a user should not create a product without being logged in as an admin.
      *
      * @return void
      */
 
-    public function test_that_only_admin_create_product()
+    public function test_that_normal_user_cannot_create_product()
     {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
         $data = [
             // 'name' => 'Bush',
             'price' => 100,
@@ -111,11 +113,7 @@ class ProductControllerTest extends TestCase
 
         $response = $this->json('POST', route('admin.product.store'), $data);
 
-        $response->assertJson([
-            "message" => "Unauthenticated.",
-        ]);
-
-        $response->assertStatus(401);
+        $response->assertStatus(404);
     }
 
     /**
@@ -166,6 +164,38 @@ class ProductControllerTest extends TestCase
             "message" => "Product not found.",
         ]);
         $response->assertStatus(400);
+    }
+
+    /**
+     * Test that a user should not fetch removed products without being logged in as a sales rep.
+     *
+     * @return void
+     */
+
+    public function test_that_normal_user_can_not_fetch_removed_products()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $response = $this->json('GET', route('sales.products.removed'));
+
+        $response->assertStatus(404);
+    }
+
+    /**
+     * Test that sales rep can fetch removed products
+     *
+     * @return void
+     */
+
+    public function test_that_only_sales_rep_can_fetch_removed_products()
+    {
+        $user = User::find(3);
+        Passport::actingAs($user);
+
+        $response = $this->json('GET', route('sales.products.removed'));
+
+        $response->assertStatus(200);
     }
 
 }

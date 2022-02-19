@@ -22,6 +22,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::post('/', [ProductController::class, 'store'])->name('store');
     });
 
+    Route::name('sales.products.')->prefix('sales/product')->middleware('isSalesRep')->group(function () {
+        Route::get('/', [ProductController::class, 'removedProducts'])->name('removed');
+    });
+
     Route::name('auth.')->prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'signup'])->name('signup');
         Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -36,6 +40,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::post('/', [CartController::class, 'store'])->name('store');
         Route::post('add', [CartController::class, 'addToCart'])->name('add');
         Route::post('remove', [CartController::class, 'addToCart'])->name('remove');
+        Route::post('checkout', [CartController::class, 'checkout'])->name('checkout');
     });
 
 });

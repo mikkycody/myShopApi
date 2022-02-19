@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Actions\Cart\CartAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\CheckoutRequest;
 use App\Queries\Cart\CartQueries;
 use App\Queries\Product\ProductQueries;
 use Exception;
@@ -46,6 +47,19 @@ class CartController extends Controller
             if (!CartQueries::findCartProduct($request->cart_id , $request->product_id))
                 return $this->res(400, false, 'Product not found in cart.');
             return $this->res(200, true, 'Product Removed', CartAction::removeFromCart());
+        } catch (Exception $e) {
+            return $this->res(500, false, $e->getMessage());
+        }
+    }
+
+    public function checkout(CheckoutRequest $request)
+    {
+        try {
+            if (!$cart = CartQueries::find($request->cart_id))
+                return $this->res(400, false, 'Cart not found.');
+            if ($cart->products()->count() == 0)
+                return $this->res(400, false, 'No product(s) found.');
+            return $this->res(200, true, 'Checkout Successful', CartAction::checkout());
         } catch (Exception $e) {
             return $this->res(500, false, $e->getMessage());
         }

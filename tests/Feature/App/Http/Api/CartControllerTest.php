@@ -207,4 +207,75 @@ class CartControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Test checkout must contain cart id.
+     *
+     * @return void
+     */
+
+    public function test_that_checkout_must_contain_cart_id()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $response = $this->json('POST', route('cart.checkout'));
+
+        $response->assertJsonValidationErrors(['cart_id']);
+
+        $response->assertJson([
+            "message" => "The cart id field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test checkout cart must contain one or more products.
+     *
+     * @return void
+     */
+
+    public function test_that_checkout_must_contain_one_or_more_products()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+
+        $data = [
+            'cart_id' => $cart->id,
+        ];
+
+        $response = $this->json('POST', route('cart.checkout'), $data);
+
+        $response->assertJson([
+            "message" => "No product(s) found.",
+        ]);
+
+        $response->assertStatus(400);
+    }
+
+    /**
+     * Test checkout cart is processed.
+     *
+     * @return void
+     */
+
+    public function test_that_checkout_cart_is_processed()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+        $cart->products()->attach(1);
+
+        $data = [
+            'cart_id' => $cart->id,
+        ];
+
+        $response = $this->json('POST', route('cart.checkout'), $data);
+
+        $response->assertStatus(200);
+    }
+
 }

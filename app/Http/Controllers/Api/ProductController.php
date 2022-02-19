@@ -48,4 +48,14 @@ class ProductController extends Controller
             return $this->res(500, false, $e->getMessage());
         }
     }
+
+    public function removedProducts()
+    {
+        try {
+            $products = ProductQueries::removedItems();
+            return new ProductCollection($products);
+        } catch (Exception $e) {
+            return $this->res(500, false, $e->getMessage());
+        }
+    }
 }
