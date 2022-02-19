@@ -20,9 +20,14 @@ class CartAction
     public static function add()
     {
         DB::beginTransaction();
-        return Cart::create([
-            'user_id' => Auth::id()
-        ]);
+        return Cart::find(request()->cart_id)->products()->attach(request()->product_id);
+        DB::commit();
+    }
+
+    public static function removeFromCart()
+    {
+        DB::beginTransaction();
+        return Cart::find(request()->cart_id)->products()->where('product_id', request()->product_id)->delete();
         DB::commit();
     }
 }

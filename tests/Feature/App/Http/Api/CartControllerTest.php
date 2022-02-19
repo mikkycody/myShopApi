@@ -155,4 +155,56 @@ class CartControllerTest extends TestCase
 
         $response->assertStatus(400);
     }
+
+    /**
+     * Test that a product removed should exist in cart.
+     *
+     * @return void
+     */
+
+    public function test_that_a_product_removed_should_exist_in_cart()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+
+        $data = [
+            'cart_id' => $cart->id,
+            'product_id' => 1000000,
+        ];
+
+        $response = $this->json('POST', route('cart.remove'), $data);
+
+        $response->assertJson([
+            "message" => "Product not found.",
+        ]);
+
+        $response->assertStatus(400);
+    }
+
+    /**
+     * Test that a product removed should exist in cart.
+     *
+     * @return void
+     */
+
+    public function test_that_a_product_can_be_removed_from_cart()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+        $cart->products()->attach(1);
+
+        $data = [
+            'cart_id' => $cart->id,
+            'product_id' => 1,
+        ];
+
+        $response = $this->json('POST', route('cart.remove'), $data);
+
+        $response->assertStatus(200);
+    }
+
 }

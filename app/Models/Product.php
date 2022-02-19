@@ -25,4 +25,12 @@ class Product extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Product to cart relationship
+     */
+    public function carts()
+    {
+        return $this->belongsTo(Cart::class);
+    }
 }

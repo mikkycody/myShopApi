@@ -35,6 +35,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
     Route::name('cart.')->prefix('product')->middleware('auth')->group(function () {
         Route::post('/', [CartController::class, 'store'])->name('store');
         Route::post('add', [CartController::class, 'addToCart'])->name('add');
+        Route::post('remove', [CartController::class, 'addToCart'])->name('remove');
     });
 
 });
