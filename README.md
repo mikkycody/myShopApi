@@ -73,6 +73,10 @@ This is the basic flow of the appkication.
 - A user can remove a product from cart (only before checkout)
 - A sales rep can login and hit the "removed items" endpoint to get the list of products that were removed before checkout 
 
+### Limitations
+-  I would have used redis caching to ensure calling the endpoints more efficiently
+- I would have handled more edge cases
+
 
 ## Conclusion
 
