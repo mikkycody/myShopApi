@@ -8,10 +8,11 @@ use Illuminate\Support\Facades\DB;
 class ProductAction {
     public static function store(){
         DB::beginTransaction();
-        return Auth::user()->products()->save(new Product([
+        $response = Auth::user()->products()->save(new Product([
             'name' => request()->name,
             'price' => request()->price,
         ]));
         DB::commit();
+        return $response;
     }
 }

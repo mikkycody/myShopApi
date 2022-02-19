@@ -19,6 +19,10 @@ class ProductQueries
 
     public static function removedItems()
     {
-        return Product::whereIn('id' , CartProduct::where('deleted_at', '!==', null)->pluck('product_id'))->paginate(10);
+        return Product::whereIn('id' , CartProduct::onlyTrashed()->pluck('product_id'))->paginate(10);
+    }
+
+    public static function checkRecord($cart_id, $product_id){
+        return CartProduct::where('cart_id', $cart_id)->where('product_id', $product_id)->exists() === false;
     }
 }

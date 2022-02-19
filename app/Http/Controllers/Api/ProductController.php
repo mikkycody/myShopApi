@@ -14,7 +14,7 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->only(["store"]);
+        $this->middleware('auth:api')->only(["store", "removedProducts"]);
     }
 
     public function store(CreateProductRequest $request)

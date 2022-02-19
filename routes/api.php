@@ -18,13 +18,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
-    Route::name('admin.product.')->prefix('admin/product')->middleware('isAdmin')->group(function () {
-        Route::post('/', [ProductController::class, 'store'])->name('store');
-    });
-
-    Route::name('sales.products.')->prefix('sales/product')->middleware('isSalesRep')->group(function () {
-        Route::get('/', [ProductController::class, 'removedProducts'])->name('removed');
-    });
 
     Route::name('auth.')->prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'signup'])->name('signup');
@@ -32,14 +25,22 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     });
 
-    Route::name('product.')->prefix('product')->group(function () {
+    Route::name('admin.product.')->prefix('admin/product')->middleware('isAdmin')->group(function () {
+        Route::post('/', [ProductController::class, 'store'])->name('store');
+    });
+
+    Route::name('sales.products.')->prefix('sales/products')->middleware('isSalesRep')->group(function () {
+        Route::get('/', [ProductController::class, 'removedProducts'])->name('removed');
+    });
+
+    Route::name('product.')->prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('all');
         Route::get('{id}', [ProductController::class, 'show'])->name('show');
     });
-    Route::name('cart.')->prefix('product')->middleware('auth')->group(function () {
+    Route::name('cart.')->prefix('carts')->middleware('auth:api')->group(function () {
         Route::post('/', [CartController::class, 'store'])->name('store');
         Route::post('add', [CartController::class, 'addToCart'])->name('add');
-        Route::post('remove', [CartController::class, 'addToCart'])->name('remove');
+        Route::post('remove', [CartController::class, 'removeFromCart'])->name('remove');
         Route::post('checkout', [CartController::class, 'checkout'])->name('checkout');
     });
 

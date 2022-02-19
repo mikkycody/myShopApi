@@ -12,4 +12,12 @@ class CartProduct extends Model
     
     protected $table = 'cart_product';
 
+    /**
+     * CartProduct to product relationship
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }

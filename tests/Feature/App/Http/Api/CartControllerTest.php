@@ -177,7 +177,7 @@ class CartControllerTest extends TestCase
         $response = $this->json('POST', route('cart.remove'), $data);
 
         $response->assertJson([
-            "message" => "Product not found.",
+            "message" => "Product not found in cart.",
         ]);
 
         $response->assertStatus(400);
