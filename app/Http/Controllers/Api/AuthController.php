@@ -25,6 +25,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => bcrypt($request->password)
             ]);
+            $user->roles()->attach(2);
             return $this->res(201, true, 'User Created Successfully', new UserResource($user));
         } catch (Exception $e) {
             return $this->res(500, false, $e->getMessage());

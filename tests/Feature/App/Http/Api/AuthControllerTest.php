@@ -267,7 +267,7 @@ class AuthTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        \Artisan::call('passport:install');
+        \Illuminate\Support\Facades\Artisan::call('passport:install');
 
         $user = User::factory()->create();
 
@@ -286,7 +286,7 @@ class AuthTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        \Artisan::call('passport:install');
+        \Illuminate\Support\Facades\Artisan::call('passport:install');
 
         $user = User::factory()->create();
 
