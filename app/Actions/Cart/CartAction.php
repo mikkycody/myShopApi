@@ -16,4 +16,13 @@ class CartAction
         ]);
         DB::commit();
     }
+
+    public static function add()
+    {
+        DB::beginTransaction();
+        return Cart::create([
+            'user_id' => Auth::id()
+        ]);
+        DB::commit();
+    }
 }

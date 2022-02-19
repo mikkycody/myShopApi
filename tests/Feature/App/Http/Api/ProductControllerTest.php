@@ -143,20 +143,29 @@ class ProductControllerTest extends TestCase
 
     public function test_that_user_can_retrieve_single_product()
     {
-        $product = new Product;
-
-        $product->name = "Test product";
-        $product->price = 100;
-        $product->user_id = 1;
-        $product->save();
-
-        $response = $this->json('GET', route('product.show', $product->id));
+        $response = $this->json('GET', route('product.show', 1));
 
         $response->assertJson([
             "status" => true,
         ]);
 
         $response->assertStatus(200);
+    }
+
+    /**
+     * Test that a products should exist.
+     *
+     * @return void
+     */
+
+    public function test_that_user_can_not_retrieve_a_non_existing_product()
+    {
+        $response = $this->json('GET', route('product.show', 100000));
+
+        $response->assertJson([
+            "message" => "Product not found.",
+        ]);
+        $response->assertStatus(400);
     }
 
 }

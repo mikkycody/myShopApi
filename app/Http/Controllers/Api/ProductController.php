@@ -41,6 +41,8 @@ class ProductController extends Controller
     {
         try {
             $product = ProductQueries::find($id);
+            if(!$product)
+                return $this->res(400, false, 'Product not found.');
             return $this->res(200, true, 'Product Retrieved Successfully', new ProductResource($product));
         } catch (Exception $e) {
             return $this->res(500, false, $e->getMessage());

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\App\Http\Api;
 
+use App\Models\Cart;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -10,7 +12,7 @@ use Laravel\Passport\Passport;
 class CartControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     public function setUp(): void
     {
         parent::setUp();
@@ -35,7 +37,7 @@ class CartControllerTest extends TestCase
     }
 
     /**
-     * Test that a no logged in user should not create a cart.
+     * Test that a non logged in user should not create a cart.
      *
      * @return void
      */
@@ -49,5 +51,108 @@ class CartControllerTest extends TestCase
         ]);
 
         $response->assertStatus(401);
+    }
+
+    /**
+     * Test that a product can be added to cart.
+     *
+     * @return void
+     */
+
+    public function test_that_a_product_can_be_added_to_cart()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+        $cart = Cart::create(['user_id' => $user->id]);
+
+        $data = [
+            'cart_id' => $cart->id,
+            'product_id' => 1,
+        ];
+
+        $response = $this->json('POST', route('cart.add'), $data);
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Test that a product should be added to cart.
+     *
+     * @return void
+     */
+
+    public function test_that_a_product_should_be_added_to_cart()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+
+        $data = [
+            'cart_id' => $cart->id,
+            // 'product_id' => 1,
+        ];
+
+        $response = $this->json('POST', route('cart.add'), $data);
+
+        $response->assertJsonValidationErrors(['product_id']);
+
+        $response->assertJson([
+            "message" => "The product id field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a product added should exist.
+     *
+     * @return void
+     */
+
+    public function test_that_a_product_added_should_exists()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $cart = Cart::create(['user_id' => $user->id]);
+
+        $data = [
+            'cart_id' => $cart->id,
+            'product_id' => 1000000,
+        ];
+
+        $response = $this->json('POST', route('cart.add'), $data);
+
+        $response->assertJson([
+            "message" => "Product not found.",
+        ]);
+
+        $response->assertStatus(400);
+    }
+
+    /**
+     * Test that cart should exist.
+     *
+     * @return void
+     */
+
+    public function test_that_cart_should_exist()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'cart_id' => 10000000,
+            'product_id' => 1,
+        ];
+
+        $response = $this->json('POST', route('cart.add'), $data);
+
+        $response->assertJson([
+            "message" => "Cart not found.",
+        ]);
+
+        $response->assertStatus(400);
     }
 }

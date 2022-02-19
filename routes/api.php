@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
-    Route::name('admin.product.')->prefix('product')->middleware('isAdmin')->group(function () {
+    Route::name('admin.product.')->prefix('admin/product')->middleware('isAdmin')->group(function () {
         Route::post('/', [ProductController::class, 'store'])->name('store');
     });
 
@@ -32,6 +32,9 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::get('/', [ProductController::class, 'index'])->name('all');
         Route::get('{id}', [ProductController::class, 'show'])->name('show');
     });
+    Route::name('cart.')->prefix('product')->middleware('auth')->group(function () {
+        Route::post('/', [CartController::class, 'store'])->name('store');
+        Route::post('add', [CartController::class, 'addToCart'])->name('add');
+    });
 
-    Route::post('cart', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 });
