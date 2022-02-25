@@ -15,15 +15,23 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'cart_id',
+        'user_id','reference', 'total', 'status',
     ];
 
     /**
-     * Order to cart relationship
+     * Order to user relationship
      */
-    public function cart()
+    public function user()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Order to items relationship
+     */
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
 }

@@ -59,12 +59,12 @@ class User extends Authenticatable
     }
 
     /**
-     * User to carts relationship
+     * User to orders relationship
      */
 
-    public function carts()
+    public function orders()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Order::class);
     }
 
      /** Check if user has a role of an admin */
