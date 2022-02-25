@@ -8,6 +8,7 @@ use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\RemoveProductRequest;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\RemovedItemCollection;
 use App\Queries\Product\ProductQueries;
 use Exception;
 
@@ -62,8 +63,7 @@ class ProductController extends Controller
     public function removedProducts()
     {
         try {
-            $products = ProductQueries::removedItems();
-            return new ProductCollection($products);
+            return new RemovedItemCollection(ProductQueries::removedItems());
         } catch (Exception $e) {
             return $this->res(500, false, $e->getMessage());
         }

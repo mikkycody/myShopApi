@@ -13,4 +13,22 @@ class RemovedItem extends Model
         'user_id',
         'product_id',
     ];
+
+    /**
+     * Removed item to user relationship
+     */
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Removed item to product relationship
+     */
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

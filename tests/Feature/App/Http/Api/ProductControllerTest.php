@@ -3,11 +3,12 @@
 namespace Tests\Feature\App\Http\Api;
 
 use App\Models\User;
-use App\Models\Product;
+use App\Models\RemovedItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Testing\Fluent\AssertableJson;
+
 
 class ProductControllerTest extends TestCase
 {
@@ -253,20 +254,40 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    // /**
-    //  * Test that sales rep can fetch removed products
-    //  *
-    //  * @return void
-    //  */
+    /**
+     * Test that sales rep can fetch removed products
+     *
+     * @return void
+     */
 
-    // public function test_that_only_sales_rep_can_fetch_removed_products()
-    // {
-    //     $user = User::find(3);
-    //     Passport::actingAs($user);
+    public function test_that_only_sales_rep_can_fetch_removed_products()
+    {
+        $user = User::find(3);
+        Passport::actingAs($user);
 
-    //     $response = $this->json('GET', route('sales.products.removed'));
+        RemovedItem::create([
+            'user_id' => $user->id,
+            'product_id' => 1,
+        ]);
+        $response = $this->json('GET', route('sales.products.removed'));
 
-    //     $response->assertStatus(200);
-    // }
-
+        $response
+            ->assertJson(
+                fn (AssertableJson $json) =>
+                $json->has(
+                    'data.0.product',
+                    fn ($json) =>
+                    $json->where('id', 1)
+                        ->etc()
+                )
+                    ->has(
+                        'data.0.user',
+                        fn ($json) =>
+                        $json->where('id', $user->id)
+                            ->etc()
+                    )
+                    ->etc()
+            );
+        $response->assertStatus(200);
+    }
 }

@@ -29,7 +29,7 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
     });
 
     Route::controller(ProductController::class)->name('sales.products.')->prefix('sales/products')->middleware('isSalesRep')->group(function () {
-        Route::get('/', 'removedProducts')->name('removed');
+        Route::get('removed', 'removedProducts')->name('removed');
     });
 
     Route::controller(ProductController::class)->name('product.')->prefix('products')->group(function () {
