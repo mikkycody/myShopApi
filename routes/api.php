@@ -20,26 +20,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
 
-    Route::name('auth.')->prefix('auth')->group(function () {
-        Route::post('register', [AuthController::class, 'signup'])->name('signup');
-        Route::post('login', [AuthController::class, 'login'])->name('login');
-        Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::controller(AuthController::class)->name('auth.')->prefix('auth')->group(function () {
+        Route::post('register', 'signup')->name('signup');
+        Route::post('login', 'login')->name('login');
+        Route::get('logout', 'logout')->name('logout');
     });
 
-    Route::name('admin.product.')->prefix('admin/product')->middleware('isAdmin')->group(function () {
-        Route::post('/', [ProductController::class, 'store'])->name('store');
+    Route::controller(ProductController::class)->name('admin.product.')->prefix('admin/product')->middleware('isAdmin')->group(function () {
+        Route::post('/', 'store')->name('store');
     });
 
-    Route::name('sales.products.')->prefix('sales/products')->middleware('isSalesRep')->group(function () {
-        Route::get('/', [ProductController::class, 'removedProducts'])->name('removed');
+    Route::controller(ProductController::class)->name('sales.products.')->prefix('sales/products')->middleware('isSalesRep')->group(function () {
+        Route::get('/', 'removedProducts')->name('removed');
     });
 
-    Route::name('product.')->prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index'])->name('all');
-        Route::get('{id}', [ProductController::class, 'show'])->name('show');
+    Route::controller(ProductController::class)->name('product.')->prefix('products')->group(function () {
+        Route::get('/', 'index')->name('all');
+        Route::get('{id}', 'show')->name('show');
+        Route::get('', 'removeItem')->name('show');
     });
-    Route::name('order.')->prefix('orders')->middleware('auth:api')->group(function () {
-        Route::post('/', [OrderController::class, 'store'])->name('store');
-        Route::post('remove', [OrderController::class, 'removeProduct'])->name('remove');
+    Route::controller(OrderController::class)->name('order.')->prefix('orders')->middleware('auth:api')->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::post('remove', 'removeProduct')->name('remove');
     });
 });

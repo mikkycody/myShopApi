@@ -111,7 +111,7 @@ class OrderControllerTest extends TestCase
     {
         $user = User::find(2);
         Passport::actingAs($user);
-       
+
         $data = [
             'products' => 1
         ];

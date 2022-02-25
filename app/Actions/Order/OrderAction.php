@@ -2,7 +2,6 @@
 
 namespace App\Actions\Order;
 
-use App\Queries\Order\OrderQueries;
 use App\Queries\Product\ProductQueries;
 use Illuminate\Support\Facades\DB;
 
@@ -13,9 +12,9 @@ class OrderAction
         DB::beginTransaction();
         $total = self::calculateTotal();
         $order = request()->user()->orders()->create([
-            'reference' => OrderQueries::generateReference(),
+            'reference' => self::generateReference(),
             'total' => $total,
-            'status' => true
+            'status' => false
         ]);
         self::storeItems($order->id);
         DB::commit();
@@ -44,5 +43,10 @@ class OrderAction
         }
         DB::table('order_items')->insert($items);
         return $items;
+    }
+
+    public static function generateReference()
+    {
+        return 'ORD-' . uniqid(time());
     }
 }
