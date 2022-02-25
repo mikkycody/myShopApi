@@ -42,11 +42,17 @@ class OrderAction
             ];
         }
         DB::table('order_items')->insert($items);
-        return $items;
     }
 
     public static function generateReference()
     {
         return 'ORD-' . uniqid(time());
+    }
+
+    public static function checkout()
+    {
+        request()->user()->orders()->where('id', request()->order_id)->update([
+            'status' => true
+        ]);
     }
 }

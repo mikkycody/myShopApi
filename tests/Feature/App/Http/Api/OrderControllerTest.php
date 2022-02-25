@@ -3,6 +3,7 @@
 namespace Tests\Feature\App\Http\Api;
 
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -194,6 +195,79 @@ class OrderControllerTest extends TestCase
 
         $response->assertJson([
             "message" => "The product quantity is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can checkout order.
+     *
+     * @return void
+     */
+
+    public function test_that_user_can_checkout_order()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $order = Order::create([
+            'reference' => 'ORD-ref12345',
+            'user_id' => $user->id,
+            'total' => 1000,
+            'status' => false
+        ]);
+        $data = [
+            'order_id' => $order->id
+        ];
+        $response = $this->json('POST', route('order.checkout'), $data);
+
+        $response->assertJson([
+            "message" => "Checkout Successful",
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Test that a user should not checkout order without order id.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_checkout_order_without_order_id()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $response = $this->json('POST', route('order.checkout'));
+
+        $response->assertJson([
+            "message" => "The order id field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user should not checkout order with order id that does not exist.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_checkout_order_with_order_id_that_does_not_exist()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'order_id' => 100000
+        ];
+
+        $response = $this->json('POST', route('order.checkout'), $data);
+
+        $response->assertJson([
+            "message" => "No order found with this id.",
         ]);
 
         $response->assertStatus(422);
