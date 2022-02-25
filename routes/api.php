@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,11 +38,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
         Route::get('/', [ProductController::class, 'index'])->name('all');
         Route::get('{id}', [ProductController::class, 'show'])->name('show');
     });
-    Route::name('cart.')->prefix('carts')->middleware('auth:api')->group(function () {
-        Route::post('/', [CartController::class, 'store'])->name('store');
-        Route::post('add', [CartController::class, 'addToCart'])->name('add');
-        Route::post('remove', [CartController::class, 'removeFromCart'])->name('remove');
-        Route::post('checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::name('order.')->prefix('orders')->middleware('auth:api')->group(function () {
+        Route::post('/', [OrderController::class, 'store'])->name('store');
+        Route::post('remove', [OrderController::class, 'removeProduct'])->name('remove');
     });
-
 });

@@ -6,11 +6,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Schema;
 
-class OrderSchemaTest extends TestCase
+class OrderItemsSchemaTest extends TestCase
 {
     use RefreshDatabase;
     public function test_that_orders_schema_has_all_expected_columns()
     {
-        $this->assertTrue(Schema::hasColumns('orders', ['id', 'reference', 'user_id', 'total', 'status']), 1);
+        $this->assertTrue(Schema::hasColumns('order_items', ['id', 'order_id', 'product_id', 'quantity']), 1);
     }
 }
