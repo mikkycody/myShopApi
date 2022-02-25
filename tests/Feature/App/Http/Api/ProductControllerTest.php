@@ -167,6 +167,77 @@ class ProductControllerTest extends TestCase
     }
 
     /**
+     * Test that a user can not remove a product without product id.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_remove_a_product_without_product_id()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $response = $this->json('POST', route('product.remove'));
+
+        $response->assertJson([
+            "message" => "The product id field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can not remove a product that does not exist.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_remove_a_product_that_does_not_exists()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'product_id' => 100000,
+        ];
+
+        $response = $this->json('POST', route('product.remove'), $data);
+
+        $response->assertJson([
+            "message" => "No product found with this id.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can remove a product.
+     *
+     * @return void
+     */
+
+    public function test_that_user_can_remove_a_product()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'product_id' => 1,
+        ];
+        $response = $this->json('POST', route('product.remove'), $data);
+
+        $response->assertJson([
+            "message" => "Product Removed Successfully.",
+        ]);
+
+        $this->assertDatabaseHas('removed_items', [
+            'user_id' => 2,
+            'product_id' => 1,
+        ]);
+        $response->assertStatus(200);
+    }
+
+    /**
      * Test that a user should not fetch removed products without being logged in as a sales rep.
      *
      * @return void

@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,10 +35,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function () {
     Route::controller(ProductController::class)->name('product.')->prefix('products')->group(function () {
         Route::get('/', 'index')->name('all');
         Route::get('{id}', 'show')->name('show');
-        Route::get('', 'removeItem')->name('show');
+        Route::post('remove', 'remove')->name('remove');
     });
     Route::controller(OrderController::class)->name('order.')->prefix('orders')->middleware('auth:api')->group(function () {
         Route::post('/', 'store')->name('store');
-        Route::post('remove', 'removeProduct')->name('remove');
+        Route::post('checkout', 'checkout')->name('checkout');
     });
 });
