@@ -25,7 +25,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_create_product_without_name()
+    public function test_that_user_should_not_create_product_without_name()
     {
         $user = User::find(1);
         Passport::actingAs($user);
@@ -52,7 +52,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_create_product_without_price()
+    public function test_that_user_should_not_create_product_without_price()
     {
         $user = User::find(1);
         Passport::actingAs($user);
@@ -156,7 +156,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_retrieve_a_non_existing_product()
+    public function test_that_user_should_not_retrieve_a_non_existing_product()
     {
         $response = $this->json('GET', route('product.show', 100000));
 
@@ -172,7 +172,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_normal_user_can_not_fetch_removed_products()
+    public function test_that_normal_user_should_not_fetch_removed_products()
     {
         $user = User::find(2);
         Passport::actingAs($user);
@@ -182,20 +182,20 @@ class ProductControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * Test that sales rep can fetch removed products
-     *
-     * @return void
-     */
+    // /**
+    //  * Test that sales rep can fetch removed products
+    //  *
+    //  * @return void
+    //  */
 
-    public function test_that_only_sales_rep_can_fetch_removed_products()
-    {
-        $user = User::find(3);
-        Passport::actingAs($user);
+    // public function test_that_only_sales_rep_can_fetch_removed_products()
+    // {
+    //     $user = User::find(3);
+    //     Passport::actingAs($user);
 
-        $response = $this->json('GET', route('sales.products.removed'));
+    //     $response = $this->json('GET', route('sales.products.removed'));
 
-        $response->assertStatus(200);
-    }
+    //     $response->assertStatus(200);
+    // }
 
 }

@@ -18,7 +18,7 @@ class AuthControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_sign_up_with_no_name()
+    public function test_that_user_should_not_sign_up_with_no_name()
     {
         $data = [
             // 'name' => 'Bush',
@@ -45,7 +45,7 @@ class AuthControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_sign_up_with_no_password()
+    public function test_that_user_should_not_sign_up_with_no_password()
     {
         $data = [
             'name' => 'Bush',
@@ -73,7 +73,7 @@ class AuthControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_sign_up_with_no_password_confirmation_match()
+    public function test_that_user_should_not_sign_up_with_no_password_confirmation_match()
     {
         $data = [
             'name' => 'Bush',
@@ -101,7 +101,7 @@ class AuthControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_sign_up_with_no_email()
+    public function test_that_user_should_not_sign_up_with_no_email()
     {
         $data = [
             'name' => 'Bush',
@@ -127,7 +127,7 @@ class AuthControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_sign_up_with_invalid_email()
+    public function test_that_user_should_not_sign_up_with_invalid_email()
     {
         $data = [
             'name' => 'Bush',
@@ -174,7 +174,7 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_that_user_can_not_sign_in_with_no_email()
+    public function test_that_user_should_not_sign_in_with_no_email()
     {
         $data = [
             // 'email' => 'Bush@gmail.com',
@@ -197,7 +197,7 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_that_user_can_not_sign_in_with_invalid_email()
+    public function test_that_user_should_not_sign_in_with_invalid_email()
     {
         $data = [
             'email' => "something@invalid",
@@ -220,7 +220,7 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_that_user_can_not_sign_in_with_no_password()
+    public function test_that_user_should_not_sign_in_with_no_password()
     {
         $data = [
             'email' => 'Bush@gmail.com',
@@ -243,7 +243,7 @@ class AuthControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_that_user_can_not_sign_in_with_wrong_credentials()
+    public function test_that_user_should_not_sign_in_with_wrong_credentials()
     {
         $data = [
             //send wrong login details

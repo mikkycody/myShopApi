@@ -17,6 +17,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'user_id',
     ];
 
     /**
@@ -26,11 +27,4 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Product to cart relationship
-     */
-    public function carts()
-    {
-        return $this->belongsToMany(Cart::class);
-    }
 }

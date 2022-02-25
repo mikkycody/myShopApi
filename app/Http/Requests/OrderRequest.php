@@ -13,7 +13,7 @@ class OrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,23 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'products' => 'required|array',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required',
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'products.*.id.required' => 'The product id is required.',
+            'products.*.quantity.required' => 'The product quantity is required.',
+            'products.*.id.exists' => 'No product found with this id.',
         ];
     }
 }
