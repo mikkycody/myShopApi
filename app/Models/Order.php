@@ -20,6 +20,8 @@ class Order extends Model
 
     /**
      * Order to user relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
@@ -28,6 +30,8 @@ class Order extends Model
 
     /**
      * Order to items relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function items()
     {

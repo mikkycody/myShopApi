@@ -7,7 +7,6 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,8 +41,9 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
-            if (!Auth::attempt($request->only('email', 'password')))
+            if (!Auth::attempt($request->only('email', 'password'))) {
                 return $this->res(401, false, 'Unauthorized');
+            }
             $user = $request->user();
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;

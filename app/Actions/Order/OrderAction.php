@@ -31,7 +31,7 @@ class OrderAction
         return $total;
     }
 
-    public static function storeItems($id)
+    public static function storeItems(int $id)
     {
         $items = [];
         foreach (request()->products as $product) {

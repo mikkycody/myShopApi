@@ -16,6 +16,8 @@ class RemovedItem extends Model
 
     /**
      * Removed item to user relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
 
     public function user()
@@ -25,6 +27,8 @@ class RemovedItem extends Model
 
     /**
      * Removed item to product relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
 
     public function product()

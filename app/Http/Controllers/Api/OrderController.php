@@ -16,6 +16,11 @@ class OrderController extends Controller
         $this->middleware('auth:api');
     }
 
+    /**
+     * Store new order.
+     * @param  \App\Http\Requests\OrderRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(OrderRequest $request)
     {
         try {
@@ -26,7 +31,11 @@ class OrderController extends Controller
         }
     }
 
-    public function checkout(CheckoutRequest $request)
+    /**
+     * Checkout order.
+     * @param  \App\Http\Requests\CheckoutRequest  $request
+     * @return \Illuminate\Http\Response
+     */    public function checkout(CheckoutRequest $request)
     {
         try {
             OrderAction::checkout();

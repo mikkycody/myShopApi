@@ -7,7 +7,7 @@ use App\Models\RemovedItem;
 
 class ProductQueries
 {
-    public static function find($id)
+    public static function find(int $id)
     {
         return Product::find($id);
     }
