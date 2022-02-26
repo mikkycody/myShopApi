@@ -71,7 +71,8 @@ This is the basic flow of the application.
 - Login
 - To create a new product, be logged in as an admin (Only an admin can access this endpoint)
 - A user can create an order.
-- A user can remove a product from cart
+- A user can remove a product from cart.
+- A user can checkout order.
 - A sales rep can login and hit the "removed items" endpoint to get the list of products that were removed before checkout 
 
 ### Limitations
@@ -79,4 +80,4 @@ This is the basic flow of the application.
 
 ## Conclusion
 
-Hire me 🙂
+Still hire me 🙂
