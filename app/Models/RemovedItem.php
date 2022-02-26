@@ -5,37 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class RemovedItem extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'user_id','reference', 'total', 'status',
+        'user_id',
+        'product_id',
     ];
 
     /**
-     * Order to user relationship
+     * Removed item to user relationship
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * Order to items relationship
+     * Removed item to product relationship
      * 
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

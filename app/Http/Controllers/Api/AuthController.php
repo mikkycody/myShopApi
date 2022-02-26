@@ -7,7 +7,6 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +19,8 @@ class AuthController extends Controller
     }
     /**
      * SIgnup user
+     * @param  \App\Http\Requests\SignUpRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function signup(SignUpRequest $request)
     {
@@ -38,12 +39,15 @@ class AuthController extends Controller
 
     /**
      * Login user and create token
+     * @param  \App\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request)
     {
         try {
-            if (!Auth::attempt($request->only('email', 'password')))
+            if (!Auth::attempt($request->only('email', 'password'))) {
                 return $this->res(401, false, 'Unauthorized');
+            }
             $user = $request->user();
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;

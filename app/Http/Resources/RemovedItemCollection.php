@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class CartResource extends JsonResource
+class RemovedItemCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +15,9 @@ class CartResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
-            'user' => new UserResource($this->user),
-            'created_at' => $this->created_at,
+            'status' => true,
+            'message' => 'Products Retrived Successfully',
+            'data' => $this->collection,
         ];
     }
 }

@@ -17,20 +17,16 @@ class Product extends Model
     protected $fillable = [
         'name',
         'price',
+        'user_id',
     ];
 
     /**
      * Product to user relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(){
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Product to cart relationship
-     */
-    public function carts()
-    {
-        return $this->belongsToMany(Cart::class);
-    }
 }

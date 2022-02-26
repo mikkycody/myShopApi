@@ -43,6 +43,8 @@ class User extends Authenticatable
 
     /**
      * User to roles relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
 
      public function roles(){
@@ -51,6 +53,8 @@ class User extends Authenticatable
 
     /**
      * User to products relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
 
     public function products()
@@ -59,12 +63,14 @@ class User extends Authenticatable
     }
 
     /**
-     * User to carts relationship
+     * User to orders relationship
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
 
-    public function carts()
+    public function orders()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Order::class);
     }
 
      /** Check if user has a role of an admin */

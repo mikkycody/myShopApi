@@ -3,11 +3,12 @@
 namespace Tests\Feature\App\Http\Api;
 
 use App\Models\User;
-use App\Models\Product;
+use App\Models\RemovedItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Testing\Fluent\AssertableJson;
+
 
 class ProductControllerTest extends TestCase
 {
@@ -25,7 +26,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_create_product_without_name()
+    public function test_that_user_should_not_create_product_without_name()
     {
         $user = User::find(1);
         Passport::actingAs($user);
@@ -52,7 +53,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_create_product_without_price()
+    public function test_that_user_should_not_create_product_without_price()
     {
         $user = User::find(1);
         Passport::actingAs($user);
@@ -156,7 +157,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
 
-    public function test_that_user_can_not_retrieve_a_non_existing_product()
+    public function test_that_user_should_not_retrieve_a_non_existing_product()
     {
         $response = $this->json('GET', route('product.show', 100000));
 
@@ -167,12 +168,83 @@ class ProductControllerTest extends TestCase
     }
 
     /**
+     * Test that a user can not remove a product without product id.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_remove_a_product_without_product_id()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $response = $this->json('POST', route('product.remove'));
+
+        $response->assertJson([
+            "message" => "The product id field is required.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can not remove a product that does not exist.
+     *
+     * @return void
+     */
+
+    public function test_that_user_should_not_remove_a_product_that_does_not_exists()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'product_id' => 100000,
+        ];
+
+        $response = $this->json('POST', route('product.remove'), $data);
+
+        $response->assertJson([
+            "message" => "No product found with this id.",
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Test that a user can remove a product.
+     *
+     * @return void
+     */
+
+    public function test_that_user_can_remove_a_product()
+    {
+        $user = User::find(2);
+        Passport::actingAs($user);
+
+        $data = [
+            'product_id' => 1,
+        ];
+        $response = $this->json('POST', route('product.remove'), $data);
+
+        $response->assertJson([
+            "message" => "Product Removed Successfully.",
+        ]);
+
+        $this->assertDatabaseHas('removed_items', [
+            'user_id' => 2,
+            'product_id' => 1,
+        ]);
+        $response->assertStatus(200);
+    }
+
+    /**
      * Test that a user should not fetch removed products without being logged in as a sales rep.
      *
      * @return void
      */
 
-    public function test_that_normal_user_can_not_fetch_removed_products()
+    public function test_that_normal_user_should_not_fetch_removed_products()
     {
         $user = User::find(2);
         Passport::actingAs($user);
@@ -193,9 +265,29 @@ class ProductControllerTest extends TestCase
         $user = User::find(3);
         Passport::actingAs($user);
 
+        RemovedItem::create([
+            'user_id' => $user->id,
+            'product_id' => 1,
+        ]);
         $response = $this->json('GET', route('sales.products.removed'));
 
+        $response
+            ->assertJson(
+                fn (AssertableJson $json) =>
+                $json->has(
+                    'data.0.product',
+                    fn ($json) =>
+                    $json->where('id', 1)
+                        ->etc()
+                )
+                    ->has(
+                        'data.0.user',
+                        fn ($json) =>
+                        $json->where('id', $user->id)
+                            ->etc()
+                    )
+                    ->etc()
+            );
         $response->assertStatus(200);
     }
-
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CheckoutRequest extends FormRequest
+class OrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class CheckoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'order_id' => 'required|exists:orders,id'
+            'products' => 'required|array',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required',
         ];
     }
 
@@ -36,7 +38,9 @@ class CheckoutRequest extends FormRequest
     public function messages()
     {
         return [
-            'order_id.exists' => 'No order found with this id.',
+            'products.*.id.required' => 'The product id is required.',
+            'products.*.quantity.required' => 'The product quantity is required.',
+            'products.*.id.exists' => 'No product found with this id.',
         ];
     }
 }

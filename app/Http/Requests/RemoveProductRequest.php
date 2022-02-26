@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddToCartRequest extends FormRequest
+class RemoveProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,19 @@ class AddToCartRequest extends FormRequest
     public function rules()
     {
         return [
-            'product_id' => 'required',
-            'cart_id' => 'required'
+            'product_id' => 'required|exists:products,id'
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'product_id.exists' => 'No product found with this id.',
         ];
     }
 }

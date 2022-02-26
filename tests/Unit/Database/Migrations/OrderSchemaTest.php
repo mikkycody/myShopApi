@@ -11,6 +11,6 @@ class OrderSchemaTest extends TestCase
     use RefreshDatabase;
     public function test_that_orders_schema_has_all_expected_columns()
     {
-        $this->assertTrue(Schema::hasColumns('orders', ['id', 'cart_id']), 1);
+        $this->assertTrue(Schema::hasColumns('orders', ['id', 'reference', 'user_id', 'total', 'status']), 1);
     }
 }
