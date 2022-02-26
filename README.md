@@ -37,7 +37,7 @@ This project runs on Laravel 9 and requires PHP 8.0+ .
 ### Installation
 
 -   git clone
-    [MyShop](https://github.com/madewithlove/technical-assignment-back-end-engineer-mikkycody.git)
+    [MyShop](https://github.com/mikkycody/myShopApi.git)
 -   Run `composer install` to install packages .
 -   Copy .env.example file, create a .env file if not created and edit database credentials there .
 -   Copy .env.example file, create a .env.testing file if not created and edit database credentials there for testing, you can use in-memory db sqlite (If using in memory do not forget to create a database.sqlite file).
@@ -49,7 +49,7 @@ This project runs on Laravel 9 and requires PHP 8.0+ .
 
 ### Database Structure
 
-![structure](https://res.cloudinary.com/dshz14tzy/image/upload/v1645311950/mikkycody/Untitled_vrp27d.png)
+![structure](https://res.cloudinary.com/dshz14tzy/image/upload/v1645836478/mikkycody/myshopdbdesign_kbjhak.png)
 
 ### Test Credentials
 
@@ -65,13 +65,13 @@ Email : salesrep@myshop.com , Password : password.
 ### Usage
 -   Please click [here](https://documenter.getpostman.com/view/13274153/UVkjwJ77) to access the Postman Collection
 
-This is the basic flow of the appkication.
+This is the basic flow of the application.
 
 - Register
 - Login
 - To create a new product, be logged in as an admin (Only an admin can access this endpoint)
-- As a normal user, to initiate an order, hit the create cart endpoint and add product(s) to the cart.
-- A user can remove a product from cart (only before checkout)
+- A user can create an order.
+- A user can remove a product from cart
 - A sales rep can login and hit the "removed items" endpoint to get the list of products that were removed before checkout 
 
 ### Limitations

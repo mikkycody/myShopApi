@@ -56,6 +56,11 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * remove product.
+     * @param  \App\Http\Requests\RemoveProductRequest  $request
+     * @return \Illuminate\Http\Response
+     */
     public function remove(RemoveProductRequest $request)
     {
         try {

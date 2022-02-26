@@ -19,6 +19,8 @@ class AuthController extends Controller
     }
     /**
      * SIgnup user
+     * @param  \App\Http\Requests\SignUpRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function signup(SignUpRequest $request)
     {
@@ -37,6 +39,8 @@ class AuthController extends Controller
 
     /**
      * Login user and create token
+     * @param  \App\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request)
     {
